@@ -1,11 +1,14 @@
 const express = require('express');
 const app = express();
-
+const userRouter = require('./routers/user');
 const port = process.env.DEFAULT_PORT || '5000';
+const connectDB = require('./config/connectDB');
+const errorHandler = require('./middlewares/errorMiddleware');
+connectDB();
+app.use(express.json());
 
-app.get('/api/test', (req, res) => {
-    res.status(200).send('Hello Express')
-})
+app.use('/api/users', userRouter);
+app.use(errorHandler);
 app.listen(port, (req, res) => {
     console.log(`server listenting on port ${port}...`)
 })
