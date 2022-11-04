@@ -33,7 +33,11 @@ exports.updatePost = asyncHandler(async (req, res, next) => {
     const { _id } = req.params;
 
     const { file } = req;
-
+    const post = await Post.findById(_id);
+    if (!post) {
+        res.status(500)
+        throw new Error('Post not found')
+    }
     if (file !== undefined) {
         await Post.updateOne({ _id }, {
             $set: {
@@ -54,5 +58,12 @@ exports.updatePost = asyncHandler(async (req, res, next) => {
 })
 
 exports.deletePost = asyncHandler(async (req, res, next) => {
-
+    const { _id } = req.params;
+    const post = await Post.findById(_id);
+    if (!post) {
+        res.status(500)
+        throw new Error('Post not found')
+    }
+    await Post.deleteOne({ _id });
+    res.status(200).send({msg:'Post deleted with success'})
 })
